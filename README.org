@@ -1,2 +1,9 @@
 * bios-extensions
 A collection of functions written in assembly that can be executed in the BIOS
+** Test the boot sector yourself
+Use you favorite emulator to load the boot_sector after compiling. For example:
+#+BEGIN_SRC
+$ nasm boot_sector.asm -f bin -o boot_sector.bin
+$ qemu-system-i386 -drive format=raw,file=boot_sector.bin
+#+END_SRC
+The exact command for the emulator may differ depending on the distribution of Linux.
