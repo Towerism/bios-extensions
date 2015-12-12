@@ -18,9 +18,9 @@
 
   jmp $                         ; infinite loop
 
-%include "print_string.asm"
-%include "print_hex.asm"
-%include "disk_load.asm"
+%include "print/print_string.asm"
+%include "hex/print_hex.asm"
+%include "disk/disk_load.asm"
 
 BOOT_DRIVE: db 0
 
