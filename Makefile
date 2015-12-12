@@ -8,7 +8,7 @@ BINARIES = $(shell find . -path "*.bin")
 OBJECTS = $(shell find . -path "*.o")
 OBJ = ${C_SOURCES:.c=.o}
 CC = gcc
-CFLAGS = -ffreestanding -c
+CFLAGS = -std=c11 -m32 -ffreestanding -c
 
 all: os-image
 
@@ -24,13 +24,13 @@ boot/boot_sector.bin: ${ASM_SOURCES}
 	nasm $< -f bin -o $@
 
 kernel/kernel.bin: kernel/kernel_entry.o ${OBJ}
-	ld -o $@ -Ttext 0x1000 $^ --oformat binary
+	ld -melf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
 
 kernel/kernel_entry.o: kernel/kernel_entry.asm
-	nasm $< -f elf64 -o $@
+	nasm $< -f elf32 -o $@
 
 %.o: %.c ${HEADERS}
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -I. $< -o $@
 
 clean:
 	rm -f os-image ${OBJECTS} ${BINARIES}
