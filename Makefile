@@ -3,7 +3,8 @@
 
 ASM_SOURCES = $(wildcard boot/*.asm)
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
-BINARIES = $(wildcard *.bin)
+BINARIES = $(shell find . -path "*.bin")
+OBJECTS = $(shell find . -path "*.o")
 OBJ = ${C_SOURCES:.c=.o}
 
 all : os-image
@@ -29,4 +30,4 @@ kernel/kernel_entry.o: kernel/kernel_entry.asm
 	gcc -ffreestanding -c $< -o $@
 
 clean:
-	rm -f os-image ${BINARIES} ${OBJ}
+	rm -f os-image ${OBJECTS} ${BINARIES}
