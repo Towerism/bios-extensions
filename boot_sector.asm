@@ -1,34 +1,31 @@
-;;  A simple boot sector program to test bios extensions
+;;  A boot sector which enters 32-bit protected mode
 [org 0x7c00]                    ; expected immediate address for boot_sector
 
-  mov [BOOT_DRIVE], dl          ; Store boot drive reported by BIOS in BOOT_DRIVE
-
-  mov bp, 0x8000                ; Set up stack
+  mov bp, 0x9000                ; initialize stack
   mov sp, bp
 
-  mov bx, 0x9000                ; Load 5 sectors to 0x0000:0x9000 from the boot disk
-  mov dh, 5
-  mov dl, [BOOT_DRIVE]
-  call disk_load
+  mov bx, MSG_REAL_MODE
+  call print_string
 
-  mov dx, [0x9000]              ; Print out the first word of the loaded sector (should be 0xdada)
-  call print_hex
-  mov dx, [0x9000 + 512]        ; Print out the first word of the next sector (should be 0xface)
-  call print_hex
+  jmp switch_to_pm
 
-  jmp $                         ; infinite loop
+  jmp $
 
-%include "print/print_string.asm"
-%include "hex/print_hex.asm"
-%include "disk/disk_load.asm"
+%include "bios-ext/print/print_string.asm"
+%include "global_descriptor_table.asm"
+%include "pm/print_string_pm.asm"
+%include "pm/switch_to_pm.asm"
 
-BOOT_DRIVE: db 0
+[bits 32]
+; Entry point for protected mode
+BEGIN_PM:
+  mov ebx, MSG_PROT_MODE
+  call print_string_pm
+
+  jmp $
+
+MSG_REAL_MODE db "Started in 16-bit Real Mode", 0
+MSG_PROT_MODE db "Successfully landed in 32-bit Protected Mode", 0
 
   times 510-($-$$) db 0           ; pad bootsector with 0's
   dw 0xaa55                       ; set last two bytes of boot_sector to the magic number
-
-;; BIOS only loads the first sector (the boot sector consisting of 512 bytes) at startup
-;; If the disk_load function works properly, this next sector should be loaded by it
-  times 256 dw 0xdada           ; this is
-  times 256 dw 0xface           ; the second sector
-  times 2048 dw 0x0000          ; this is the next 4 sectors (since we will request 5 total)
