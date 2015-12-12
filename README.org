@@ -1,2 +1,14 @@
 * os
 The makings of a simple operating system
+** Requirements
+- Linux 64-bit
+- QEmu
+** Instructions
+Build with
+#+BEGIN_SRC
+$ make
+#+END_SRC
+Run with
+#+BEGIN_SRC
+$ make run
+#+END_SRC
