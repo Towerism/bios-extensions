@@ -19,7 +19,7 @@ print_hex_set_letter:
   mov bx, print_hex_HEX_OUT     ; load hex string address into bx
   add bx, 2                     ; add 2 (skip "0x")
   add bx, cx                    ; add counter (we start at least significant bit)
-  add byte[bx], al              ; replace the character with the lower byte of ax
+  add [bx], al              ; replace the character with the lower byte of ax
   cmp cx, 0
   jne print_hex_loop            ; keep looping as long as counter is not 0
 
@@ -34,7 +34,7 @@ print_hex_reset_HEX_OUT_loop:
   mov bx, print_hex_HEX_OUT
   add bx, 2
   add bx, cx
-  mov byte[bx], '0'             ; this time we want to reset the character to '0'
+  mov [bx], '0'             ; this time we want to reset the character to '0'
   cmp cx, 0x0
   jne print_hex_reset_HEX_OUT_loop
 
