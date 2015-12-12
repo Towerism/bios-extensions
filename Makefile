@@ -3,11 +3,14 @@
 
 ASM_SOURCES = $(wildcard boot/*.asm)
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
 BINARIES = $(shell find . -path "*.bin")
 OBJECTS = $(shell find . -path "*.o")
 OBJ = ${C_SOURCES:.c=.o}
+CC = gcc
+CFLAGS = -ffreestanding -c
 
-all : os-image
+all: os-image
 
 run: os-image
 	qemu-system-x86_64 -drive format=raw,file=os-image
@@ -26,8 +29,8 @@ kernel/kernel.bin: kernel/kernel_entry.o ${OBJ}
 kernel/kernel_entry.o: kernel/kernel_entry.asm
 	nasm $< -f elf64 -o $@
 
-%.o: %.c
-	gcc -ffreestanding -c $< -o $@
+%.o: %.c ${HEADERS}
+	$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	rm -f os-image ${OBJECTS} ${BINARIES}
