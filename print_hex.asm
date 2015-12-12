@@ -41,6 +41,4 @@ print_hex_reset_HEX_OUT_loop:
   popa
   ret
 
-%include "print_string.asm"
-
 print_hex_HEX_OUT:  db "0x0000", 0 ; null terminated
