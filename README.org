@@ -1,5 +1,5 @@
 * os
-The makings of a simple operating system
+A simple kernel written C which writes to the screen if it was successfully bootstrapped by the bootstrapping code in the boot sector written in assembly.
 ** Requirements
 - Linux 64-bit
 - QEmu
